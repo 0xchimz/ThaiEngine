@@ -1,5 +1,5 @@
 //
-// Created by PUNPIKORN RATTANAWIROJKUL on 2/21/2016 AD.
+// Created by Chin on 2/18/2016.
 //
 
 #ifndef THAIENGINE_COUNTER_H
