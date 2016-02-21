@@ -1,9 +1,10 @@
 #include <stdexcept>
 #include "Reader.h"
+#include <iconv.h>
 
 using namespace std;
 
-namespace thaiengine {
+namespace ThaiEngine {
 
     LOADER::LOADER(char *file) {
         link = file;
@@ -12,15 +13,8 @@ namespace thaiengine {
     bool LOADER::time_type() {
         if(isType32 == -1) {
             is.seekg(8, is.cur);
-
-            int *zero = new int;
-            is.read((char *) &zero, sizeof(int));
-
+            isType32 = (is.get() == '\0' && is.get() == '\0' && is.get() == '\0' && is.get() == '\0');
             is.seekg(-12, is.cur);
-
-            isType32 = (int) zero == 0;
-
-            return (int) zero == 0;
         }
         return isType32;
     }
@@ -31,9 +25,9 @@ namespace thaiengine {
         return buffer;
     }
 
-    vector<RECORD*> LOADER::read_file() {
+    vector<RECORD> LOADER::read_file() {
+        int curId = 0;
         isType32 = -1;
-        record = new vector<RECORD*>;
         try {
             is.open(link, ios::binary);
             cout << "Reading file..." << endl;
@@ -41,32 +35,36 @@ namespace thaiengine {
             throw std::invalid_argument("Input file opening failed");
         }
 
-        is.seekg(0, is.end);
-        int length = is.tellg();
-
         is.seekg(256, is.beg);
 
-        while(is.tellg() <= length){
-            cout << is.tellg() << " // " << length << " " << (is.tellg() <= length) << " ";
-            RECORD* tmp = new RECORD;
-            is.read((char*) &tmp->HEADER, sizeof(tmp->HEADER));
+        while(!is.eof()){
+            RECORD tmp;
+            is.read((char*) &tmp.HEADER, sizeof(tmp.HEADER));
+
+            if(curId + 1 != tmp.HEADER.id)  break;
+
+            curId = tmp.HEADER.id;
 
             if(time_type()){
-                cout << "Type 1 ";
-                is.read((char*) &tmp->timestamp, sizeof(int64_t));
+                is.read((char*) &tmp.timestamp, sizeof(time_t));
                 is.seekg(4, is.cur);
             } else {
-                cout << "Type 2 ";
-                int32_t timestamp;
-                is.read((char*) &timestamp, sizeof(timestamp));
-                tmp->timestamp = (int64_t) timestamp;
+                time_t timestamp;
+                is.read((char*) &timestamp, sizeof(time_t));
+                tmp.timestamp = (int64_t) timestamp;
             }
-            strcpy(tmp->text, LOADER::find_text());
+            char tmp_text[MAX_SYLLABLE_TEXTSIZE];
+            strcpy(tmp_text, LOADER::find_text());
+
+            iconv_t charset = iconv_open("UTF8", "CP874");
+            size_t inSize = MAX_SYLLABLE_TEXTSIZE;
+            size_t outSize = MAX_SYLLABLE_TEXTSIZE;
+            char *input = &tmp_text[0];
+            char *output = &tmp.text[0];
+            iconv(charset, &input, &inSize, &output, &outSize);
 
             try {
-                cout << tmp->HEADER.id << ". " << tmp->text << endl;
-                record->push_back(tmp);
-                numOfRecord++;
+                record.push_back(tmp);
             }catch (const std::exception e){
                 throw std::invalid_argument("Error while push Element!");
             }
@@ -74,16 +72,6 @@ namespace thaiengine {
 
         is.close();
 
-        return *record;
-    }
-
-    int LOADER::recordCounting() {
-        return numOfRecord;
-    }
-
-    void LOADER::printAllRecord() {
-        for (RECORD *item: *record) {
-            cout << item->HEADER.id << ". " << item->text << endl;
-        }
+        return record;
     }
 }

@@ -10,9 +10,9 @@
 #include <string.h>
 #include <vector>
 
-#define MAX_SYLLABLE_TEXTSIZE 1024
+#define MAX_SYLLABLE_TEXTSIZE 1023
 
-namespace thaiengine{
+namespace ThaiEngine{
     class RECORD {
     public:
         struct HEADER {
@@ -31,15 +31,12 @@ namespace thaiengine{
     class LOADER {
     public:
         LOADER(char* link);
-        std::vector<RECORD*> read_file();
-        int recordCounting();
-        void printAllRecord();
+        std::vector<RECORD> read_file();
     private:
         char* link;
         int isType32;
-        std::vector<RECORD*> *record;
+        std::vector<RECORD> record;
         std::ifstream is;
-        int numOfRecord;
         bool time_type();
         char* find_text();
     };
