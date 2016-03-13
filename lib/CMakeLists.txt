@@ -3,5 +3,5 @@ project(readfile)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES Reader.cpp Reader.h Counter.cpp Counter.h)
+set(SOURCE_FILES Reader.cpp Reader.h Counter.cpp Counter.h Search.cpp Search.h)
 add_library(thaiengine ${SOURCE_FILES})

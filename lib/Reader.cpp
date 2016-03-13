@@ -19,13 +19,8 @@ namespace ThaiEngine {
         return isType32;
     }
 
-    char* LOADER::find_text() {
-        char buffer[MAX_SYLLABLE_TEXTSIZE];
-        is.getline(&buffer[0], MAX_SYLLABLE_TEXTSIZE, 0);
-        return buffer;
-    }
-
     vector<RECORD> LOADER::read_file() {
+        iconv_t charset = iconv_open("UTF8", "CP874");
         int curId = 0;
         isType32 = -1;
         try {
@@ -54,9 +49,8 @@ namespace ThaiEngine {
                 tmp.timestamp = (int64_t) timestamp;
             }
             char tmp_text[MAX_SYLLABLE_TEXTSIZE];
-            strcpy(tmp_text, LOADER::find_text());
+            is.getline(&tmp_text[0], MAX_SYLLABLE_TEXTSIZE, '\0');
 
-            iconv_t charset = iconv_open("UTF8", "CP874");
             size_t inSize = MAX_SYLLABLE_TEXTSIZE;
             size_t outSize = MAX_SYLLABLE_TEXTSIZE;
             char *input = &tmp_text[0];

@@ -10,7 +10,7 @@
 #include <string.h>
 #include <vector>
 
-#define MAX_SYLLABLE_TEXTSIZE 1023
+#define MAX_SYLLABLE_TEXTSIZE 1024
 
 namespace ThaiEngine{
     class RECORD {
