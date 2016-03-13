@@ -1095,4 +1095,4 @@ BEEARAAAAA | Not found in database...
 Result: 
 Found: 600 keyword(s)
 Not Found: 491 keyword(s)
-Total Time: 27 sec
+Total Time: 21 sec

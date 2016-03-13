@@ -37,12 +37,12 @@ int main(int argc, char* argv[]){
     long size = count.getSize(v);
     cout << "Number of all element: " << size << endl;
 
-//    cout << "Print result" << endl;
-//    cout << "==================" << endl;
-//    for (int i = 0 ; i < size ; i++) {
-//        ThaiEngine::RECORD e = v.at(i);
-//        cout << e.HEADER.id << ". " << e.text << endl;
-//    }
+    cout << "Print result" << endl;
+    cout << "==================" << endl;
+    for (int i = 0 ; i < size ; i++) {
+        ThaiEngine::RECORD e = v.at(i);
+        cout << e.HEADER.id << ". " << e.text << endl;
+    }
 
     return 0;
 }
