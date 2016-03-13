@@ -22,13 +22,12 @@ namespace SearchEngine {
     }
 
     void SEARCH::get_keyword() {
-        hires_clock timer;
 
         char tmp1[3], tmp2[25], tmp3[5], keyword[MAX_SYLLABLE_TEXTSIZE];
         file_output << "Search Result...\n";
         file_output << "===============================\n";
         cout << "Start searching..." << endl;
-        timer = NOW();
+        start = clock();
         while(file_keyword >> tmp1 >> tmp2 >> tmp3 >> keyword){
             int res = search(keyword);
 
@@ -41,11 +40,13 @@ namespace SearchEngine {
             }
             num_total = num_total + 1;
         }
+        stop = clock();
         file_output << "===============================\n";
         file_output << "Result: \n";
         file_output << "Found: " << num_found << " keyword(s)\n";
         file_output << "Not Found: " << num_not_found << " keyword(s)\n";
-        file_output << "Total Time: " << DIFF(timer)/1000000 << " sec\n";
+        time_duration = (stop-start)/(double)CLOCKS_PER_SEC;
+        file_output << "Total Time: " << time_duration << " sec\n";
         file_output.close();
     }
 

@@ -10,12 +10,6 @@
 #include <fstream>
 #include <cstring>
 #include <map>
-#include <chrono>
-
-typedef std::chrono::time_point<std::chrono::high_resolution_clock> hires_clock;
-
-#define NOW() std::chrono::high_resolution_clock::now()
-#define DIFF(start) std::chrono::duration_cast<std::chrono::microseconds>(NOW() - start).count()
 
 struct CompareCStrings
 {
@@ -34,6 +28,9 @@ namespace SearchEngine{
         int num_not_found = 0;
         int num_total = 0;
         std::map<char*, int, CompareCStrings> cache;
+        clock_t start;
+        clock_t stop;
+        double time_duration;
     public:
         SEARCH(std::vector<ThaiEngine::RECORD> link, char* keyword, char* output);
         int search(char* keyword);
